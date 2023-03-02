@@ -9,10 +9,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "audic": "^3.0.1",
     "dotenv": "^16.0.3",
     "jfile": "^1.1.12",
+    "play-sound": "^1.1.5",
     "puppeteer": "^14.1.1",
     "puppeteer-extra": "^3.2.3",
-    "puppeteer-extra-plugin-stealth": "^2.9.0"
+    "puppeteer-extra-plugin-stealth": "^2.9.0",
+    "sound-play": "^1.1.0"
   }
 }

