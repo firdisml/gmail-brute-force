@@ -94,10 +94,11 @@ function checkUpper(string) {
         return strings.filter(string => text.includes(string));
       }, values);
 
-      if(matches.includes("2-Step")) {
+      if(matches.includes("2-Step") || matches.includes("verification")) {
         await page.goto(loginUrl, { waitUntil: 'networkidle2' });
         continue;
       }
+      
 
       //If password valid
       if (matches.includes("verify") || matches.includes("keep")) {
