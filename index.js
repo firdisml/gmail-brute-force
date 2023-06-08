@@ -9,7 +9,7 @@ const  {exec} = require('child_process')
 
 process.setMaxListeners(0);
 
-//Check
+//Check Data File
 var myF = new JFile("./data.txt");
 
 
